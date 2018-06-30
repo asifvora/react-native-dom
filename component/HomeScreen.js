@@ -48,28 +48,23 @@ export default class HomeScreen extends React.Component {
             });
     }
 
-    handleScroll = (e) => {
-        let windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
-        if (windowHeight + offset >= height) {
-            let { page, totalPages, moviesData } = this.state;
-            if (page <= totalPages) {
-                let apiMoviesUrl = `${BASE_URL}${page}`;
-                fetch(apiMoviesUrl)
-                    .then(response => response.json())
-                    .then(response => {
-                        this.setState({
-                            isLoading: false,
-                            moviesData: [...moviesData, ...response.results],
-                            page: response.page + 1,
-                            totalPages: response.total_pages,
-                            dataSource: ds.cloneWithRows([...moviesData, ...response.results])
-                        });
-                    }).catch(err => {
-                        this.setState({ isLoading: false })
+    fetchMore = (e) => {
+        let { page, totalPages, moviesData } = this.state;
+        if (page <= totalPages) {
+            let apiMoviesUrl = `${BASE_URL}${page}`;
+            fetch(apiMoviesUrl)
+                .then(response => response.json())
+                .then(response => {
+                    this.setState({
+                        isLoading: false,
+                        moviesData: [...moviesData, ...response.results],
+                        page: response.page + 1,
+                        totalPages: response.total_pages,
+                        dataSource: ds.cloneWithRows([...moviesData, ...response.results])
                     });
-            }
+                }).catch(err => {
+                    this.setState({ isLoading: false })
+                });
         }
     }
 
@@ -93,18 +88,15 @@ export default class HomeScreen extends React.Component {
             )
         } else {
             return (
-                <ScrollView onScroll={this.handleScroll} scrollEnabled={true} contentContainerStyle={{ flex: 1 }}>
-                    <ListView
-                        style={{
-                            flex: 1,
-                        }}
-                        dataSource={this.state.dataSource}
-                        renderRow={(data) => this.listData(data)}
-                        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-                        renderHeader={() => null}
-                        renderFooter={() => null}
-                    />
-                </ScrollView>
+                <ListView
+                    style={{ flex: 1 }}
+                    dataSource={this.state.dataSource}
+                    renderRow={(data) => this.listData(data)}
+                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+                    renderHeader={() => null}
+                    renderFooter={() => null}
+                    onEndReached={() => this.setState({ isLoadingMore: true }, () => this.fetchMore())}
+                />
             );
         }
     }
