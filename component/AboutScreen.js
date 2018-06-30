@@ -18,7 +18,7 @@ export default class AboutScreen extends React.Component {
     }
 
     static navigationOptions = ({ navigation }) => {
-        console.log('navigation',navigation)
+        console.log('navigation', navigation)
         return {
             title: navigation.state.params.Details.title,
             headerTitleStyle: { width: '100%', textAlign: 'center' },
@@ -101,7 +101,7 @@ export default class AboutScreen extends React.Component {
                                 <Image
                                     style={styles.imageMovie}
                                     resizeMode='contain'
-                                    source={{ uri: `https://image.tmdb.org/t/p/w500/${Details.poster_path}` }}
+                                    source={{ uri: Details.poster_path ? `https://image.tmdb.org/t/p/w500/${Details.poster_path}` : `https://image.flaticon.com/icons/png/512/23/23228.png` }}
                                 />
                                 <View style={styles.nameView}>
                                     <Text style={styles.nameText}>
