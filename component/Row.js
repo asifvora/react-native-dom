@@ -5,30 +5,28 @@ export default class Row extends Component {
     render() {
         const data = this.props.data;
         return (
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.card} onPress={() => this.props.navigation.navigate('About', { Details: data })}>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <Image
-                            style={styles.image}
-                            // resizeMode='contain'
-                            source={{ uri: `https://image.tmdb.org/t/p/w500/${data.poster_path}` }}
-                        />
-                        <View style={styles.nameView}>
+            <TouchableOpacity style={styles.card} onPress={() => this.props.navigation('About', { Details: data })} style={styles.container}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Image
+                        style={styles.image}
+                        // resizeMode='contain'
+                        source={{ uri: `https://image.tmdb.org/t/p/w500/${data.poster_path}` }}
+                    />
+                    <View style={styles.nameView}>
+                        <Text style={[styles.nameText, { fontWeight: 'bold' }]}>
+                            {data.original_title}
+                        </Text>
+                        <View style={{ flexDirection: 'row' }}>
                             <Text style={styles.nameText}>
-                                {data.original_title}
+                                {data.release_date}
                             </Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.nameText}>
-                                    {data.release_date}
-                                </Text>
-                                <Text style={[styles.nameText, { color: 'green' }]}>
-                                    {data.vote_average}
-                                </Text>
-                            </View>
+                            <Text style={[styles.nameText, { color: 'green' }]}>
+                                {data.vote_average}
+                            </Text>
                         </View>
                     </View>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </TouchableOpacity>
         )
     }
 }
@@ -72,14 +70,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     image: {
-        flex: 1,
-        width: 230,
-        height: 210,
-        // overflow: 'hidden',
+        width: 100,
+        height: 150,
+        overflow: 'hidden',
         marginTop: 5,
         marginBottom: 5,
-        height: 60,
-        width: 60,
         borderRadius: 2,
     },
     loading: {
@@ -97,11 +92,13 @@ const styles = StyleSheet.create({
     nameView: {
         // flex: 1,
         // borderColor: '#8F8F8F',
+        justifyContent: 'center'
     },
     nameText: {
         color: '#8F8F8F',
         fontSize: 16,
         marginLeft: 10,
-        marginTop: 5
+        marginTop: 5,
+        color: 'black'
     },
 });

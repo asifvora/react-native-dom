@@ -69,9 +69,8 @@ export default class HomeScreen extends React.Component {
     }
 
     listData(data) {
-        const { navigate } = this.props.navigation;
         return (
-            <Row data={data} navigate={navigate} />
+            <Row data={data} navigation={this.props.navigation.navigate} />
         );
     }
 
@@ -92,7 +91,6 @@ export default class HomeScreen extends React.Component {
                 <ScrollView onScroll={this.handleScroll} scrollEnabled={true} contentContainerStyle={{ flex: 1 }}>
                     <ListView
                         style={{
-                            marginTop: 20,
                             flex: 1,
                         }}
                         dataSource={this.state.dataSource}
