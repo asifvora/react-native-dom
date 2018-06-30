@@ -25,8 +25,8 @@ For help getting started with React-native, view online
 #### 2. Clone the repository
 
 ```sh
-$ https://github.com/asifvora/react-native-dom-example.git
-$ cd react-native-dom-example.git/
+$ https://github.com/asifvora/react-native-dom.git
+$ cd react-native-dom
 ```
 
 #### 3. Install dependency
