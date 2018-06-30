@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView, TouchableOpacity, Dimensions, ListView } from 'react-native';
+import Row from './Row';
 const BASE_URL = `https://movie-demo-api.now.sh/3/movie/popular?page=`;
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 export default class HomeScreen extends React.Component {
 
@@ -12,6 +14,7 @@ export default class HomeScreen extends React.Component {
             page: 1,
             totalPages: null,
             isLoading: true,
+            dataSource: ds.cloneWithRows(['row 1', 'row 2']),
         }
     }
 
@@ -37,7 +40,8 @@ export default class HomeScreen extends React.Component {
                     moviesDataStatus: true,
                     moviesData: response.results,
                     page: response.page + 1,
-                    totalPages: response.total_pages
+                    totalPages: response.total_pages,
+                    dataSource: ds.cloneWithRows(response.results)
                 });
             }).catch(err => {
                 this.setState({ moviesDataStatus: false, isLoading: false })
@@ -45,70 +49,38 @@ export default class HomeScreen extends React.Component {
     }
 
     handleScroll = (e) => {
-        let windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
-        console.log('windowHeight', windowHeight)
-        console.log('height', height)
-        console.log('offset', offset)
-
-        if (windowHeight + offset >= height) {
-            console.log('if ', this.state)
-
-            let { page, totalPages, moviesData } = this.state;
-            if (page <= totalPages) {
-                let apiMoviesUrl = `${BASE_URL}${page}`;
-                fetch(apiMoviesUrl)
-                    .then(response => response.json())
-                    .then(response => {
-                        this.setState({
-                            isLoading: false,
-                            moviesData: [...moviesData, ...response.results],
-                            page: response.page + 1,
-                            totalPages: response.total_pages
-                        });
-                    }).catch(err => {
-                        this.setState({ isLoading: false })
+        let { page, totalPages, moviesData } = this.state;
+        if (page <= totalPages) {
+            let apiMoviesUrl = `${BASE_URL}${page}`;
+            fetch(apiMoviesUrl)
+                .then(response => response.json())
+                .then(response => {
+                    this.setState({
+                        isLoading: false,
+                        moviesData: [...moviesData, ...response.results],
+                        page: response.page + 1,
+                        totalPages: response.total_pages,
+                        dataSource: ds.cloneWithRows([...moviesData, ...response.results])
                     });
-            }
+                }).catch(err => {
+                    this.setState({ isLoading: false })
+                });
         }
     }
 
-
-    detailScreen(Details) {
-        this.props.navigation.navigate('About', { Details: Details });
+    listData(data) {
+        const { navigate } = this.props.navigation;
+        return (
+            <Row data={data} navigate={navigate} />
+        );
     }
 
-    movies() {
-        let { moviesDataStatus, moviesData } = this.state;
-        return moviesDataStatus === true ? moviesData.map((data, key) => {
-            return (
-                <TouchableOpacity style={styles.card} key={key} onPress={() => this.detailScreen(data)}>
-                    <View>
-                        <View style={styles.imageView}>
-                            <Image
-                                style={styles.image}
-                                resizeMode='contain'
-                                source={{ uri: `https://image.tmdb.org/t/p/w500/${data.poster_path}` }}
-                            />
-                        </View>
-                        <View style={styles.nameView}>
-                            <Text style={styles.nameText}>
-                                {data.original_title}
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            )
-        }) : <View><Text>No record found.</Text></View >;
-
-    }
 
     render() {
         //hide yellow warnings...
         console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
         console.disableYellowBox = true;
-        let movies = this.movies();
+
         if (this.state.isLoading) {
             return (
                 <View style={styles.loading}>
@@ -117,13 +89,19 @@ export default class HomeScreen extends React.Component {
             )
         } else {
             return (
-                <View style={styles.container}>
-                    <ScrollView onScroll={this.handleScroll} scrollEnabled={true}>
-                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                            {movies}
-                        </View>
-                    </ScrollView>
-                </View>
+                <ScrollView onScroll={this.handleScroll} scrollEnabled={true} contentContainerStyle={{ flex: 1 }}>
+                    <ListView
+                        style={{
+                            marginTop: 20,
+                            flex: 1,
+                        }}
+                        dataSource={this.state.dataSource}
+                        renderRow={(data) => this.listData(data)}
+                        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+                        renderHeader={() => null}
+                        renderFooter={() => null}
+                    />
+                </ScrollView>
             );
         }
     }
@@ -135,22 +113,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fafafa',
         // alignItems: 'center',
         // justifyContent: 'center',
-        padding: 20
-    },
-    card: {
-        borderWidth: 1,
-        borderColor: '#8F8F8F',
-        backgroundColor: 'white',
-        width: '15%',
-        marginLeft: 25,
-        marginBottom: 20,
-        shadowColor: 'black',
-        shadowOpacity: 0.2,
-        height: 280,
-        borderRadius: 5,
-        marginTop: 5
-        // justifyContent: 'center',
-        // alignItems: 'center',
+        // padding: 20
     },
     imageView: {
         flexDirection: 'row',
@@ -186,4 +149,9 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 5
     },
+    separator: {
+        flex: 1,
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: '#8E8E8E',
+    }
 });

@@ -62,7 +62,7 @@ export default class AboutScreen extends React.Component {
                             resizeMode='cover'
                             source={{ uri: `https://image.tmdb.org/t/p/w185/${data.profile_path}` }}
                         />
-                        <View style={styles.nameView}>
+                        <View style={[styles.nameView, { width: 300 }]}>
                             <Text style={styles.nameText}>
                                 {data.name}
                             </Text>
@@ -114,7 +114,7 @@ export default class AboutScreen extends React.Component {
                             </View>
                             <View style={styles.overviewMain}>
                                 <View style={[styles.overview]}>
-                                    <Text style={styles.overviewText}>
+                                    <Text style={[styles.overviewText]}>
                                         {Details.overview}
                                     </Text>
                                 </View>
