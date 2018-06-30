@@ -18,7 +18,6 @@ export default class AboutScreen extends React.Component {
     }
 
     static navigationOptions = ({ navigation }) => {
-        console.log('navigation', navigation)
         return {
             title: navigation.state.params.Details.title,
             headerTitleStyle: { width: '100%', textAlign: 'center' },
