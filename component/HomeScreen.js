@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 
 export default class HomeScreen extends React.Component {
 
@@ -36,12 +36,17 @@ export default class HomeScreen extends React.Component {
             });
     }
 
+    detailScreen(Details) {
+        this.props.navigation.navigate('About', { Details: Details });
+        console.log('Details', Details)
+    }
+
     movies() {
         let { moviesDataStatus, moviesData } = this.state;
 
         return moviesDataStatus === true ? moviesData.map((data, key) => {
             return (
-                <View style={styles.card} key={key} onPress={() => this.props.navigation.navigate('About')}>
+                <TouchableOpacity style={styles.card} key={key} onPress={() => this.detailScreen(data)}>
                     <View>
                         <View style={styles.imageView}>
                             <Image
@@ -56,15 +61,17 @@ export default class HomeScreen extends React.Component {
                             </Text>
                         </View>
                     </View>
-                </View>
+                </TouchableOpacity>
             )
         }) : <View><Text>No record found.</Text></View >;
 
     }
 
     render() {
+        //hide yellow warnings...
+        console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+        console.disableYellowBox = true;
         let movies = this.movies();
-
         if (this.state.isLoading) {
             return (
                 <View style={styles.loading}>
@@ -104,6 +111,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         height: 280,
         borderRadius: 5,
+        marginTop: 5
         // justifyContent: 'center',
         // alignItems: 'center',
     },
@@ -137,7 +145,7 @@ const styles = StyleSheet.create({
     },
     nameText: {
         color: '#8F8F8F',
-        fontSize: 20,
+        fontSize: 16,
         marginLeft: 10,
         marginTop: 5
     },

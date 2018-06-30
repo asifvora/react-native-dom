@@ -6,7 +6,7 @@ export default class AboutScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            details: {},
+            Details: {},
             isLoading: true,
         }
     }
@@ -22,7 +22,21 @@ export default class AboutScreen extends React.Component {
         };
     };
 
+
+    componentWillMount() {
+        setTimeout(() => {
+            this.setState({ isLoading: false });
+        }, 3000);
+        let { Details } = this.props.navigation.state.params;
+        this.setState({ Details: Details });
+    }
+
     render() {
+        //hide yellow warnings...
+        console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+        console.disableYellowBox = true;
+        const { Details } = this.state;
+        
         if (this.state.isLoading) {
             return (
                 <View style={styles.loading}>
@@ -35,7 +49,7 @@ export default class AboutScreen extends React.Component {
                     <ScrollView>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                             <Text style={styles.nameText}>
-                                ASIF
+                                Details
                             </Text>
                         </View>
                     </ScrollView>
