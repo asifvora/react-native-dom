@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView } from 'react-native';
 const BASE_URL = `https://movie-demo-api.now.sh/3/movie/popular?page=`;
+let self;
 
 export default class AboutScreen extends React.Component {
 
@@ -13,15 +14,14 @@ export default class AboutScreen extends React.Component {
             cast: [],
             castDataStatus: false,
         }
+        self = props;
     }
 
     static navigationOptions = ({ navigation }) => {
+        console.log('navigation',navigation)
         return {
-            title: 'Details',
+            title: navigation.state.params.Details.title,
             headerTitleStyle: { width: '100%', textAlign: 'center' },
-            // headerStyle: { backgroundColor: 'red' },
-            // headerLeft: (null),
-            // headerTintColor: 'pink',
             drawerLockMode: 'locked-closed',
         };
     };
