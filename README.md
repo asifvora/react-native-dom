@@ -44,7 +44,7 @@ $ http://localhost:8081/dom/
 
 ## View Demo
 
-[Demo](https://lazy-loading-react-js.netlify.com/)
+[Demo]()
 
 ## Questions?🤔 
   
