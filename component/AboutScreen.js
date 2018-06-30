@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView } from 'react-native';
+const BASE_URL = `https://movie-demo-api.now.sh/3/movie/popular?page=`;
 
 export default class AboutScreen extends React.Component {
 
@@ -7,7 +8,10 @@ export default class AboutScreen extends React.Component {
         super(props);
         this.state = {
             Details: {},
+            moviesDataStatus: false,
             isLoading: true,
+            cast: [],
+            castDataStatus: false,
         }
     }
 
@@ -29,6 +33,47 @@ export default class AboutScreen extends React.Component {
         }, 1000);
         let { Details } = this.props.navigation.state.params;
         this.setState({ Details: Details });
+    }
+
+    componentDidMount() {
+        let { Details: { id } } = this.props.navigation.state.params;
+        var apiMoviesUrl = `https://movie-demo-api.now.sh/3/movie/${id}/credits?`;
+        fetch(apiMoviesUrl)
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    cast: response.cast,
+                    castDataStatus: true,
+                });
+            }).catch(err => {
+                this.setState({ isLoading: false })
+            });
+    }
+
+    castData() {
+        const { cast, castDataStatus } = this.state;
+
+        return castDataStatus === true ? (
+            cast.map((data, key) => {
+                return (
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }} key={key}>
+                        <Image
+                            style={{ height: 50, width: 50, borderRadius: 50, marginTop: 15 }}
+                            resizeMode='cover'
+                            source={{ uri: `https://image.tmdb.org/t/p/w185/${data.profile_path}` }}
+                        />
+                        <View style={styles.nameView}>
+                            <Text style={styles.nameText}>
+                                {data.name}
+                            </Text>
+                            <Text style={styles.originalTitle}>
+                                {data.character}
+                            </Text>
+                        </View>
+                    </View>
+                )
+            })
+        ) : <View />
     }
 
     render() {
@@ -74,6 +119,9 @@ export default class AboutScreen extends React.Component {
                                     </Text>
                                 </View>
                             </View>
+                            <View style={styles.overviewMain} >
+                                {this.castData()}
+                            </View>
                         </View>
                     </ScrollView>
                 </View>
@@ -95,7 +143,7 @@ const styles = StyleSheet.create({
     overviewMain: {
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        borderColor: '#8F8F8F',
+        borderColor: '#ccc',
         backgroundColor: 'white',
         width: '100%',
         marginBottom: 10,

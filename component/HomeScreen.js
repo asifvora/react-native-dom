@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+const BASE_URL = `https://movie-demo-api.now.sh/3/movie/popular?page=`;
 
 export default class HomeScreen extends React.Component {
 
@@ -8,6 +9,8 @@ export default class HomeScreen extends React.Component {
         this.state = {
             moviesData: [],
             moviesDataStatus: false,
+            page: 1,
+            totalPages: null,
             isLoading: true,
         }
     }
@@ -24,26 +27,60 @@ export default class HomeScreen extends React.Component {
     };
 
     componentDidMount() {
-        var apiMoviesUrl = `https://movie-demo-api.now.sh/3/movie/popular?api_key=06ad8c969c78fee0a022ad991fb6f9c5&page=1`;
+        let { page } = this.state;
+        let apiMoviesUrl = `${BASE_URL}${page}`;
         fetch(apiMoviesUrl)
             .then(response => response.json())
             .then(response => {
                 this.setState({
-                    isLoading: false, moviesDataStatus: true, moviesData: response.results,
+                    isLoading: false,
+                    moviesDataStatus: true,
+                    moviesData: response.results,
+                    page: response.page + 1,
+                    totalPages: response.total_pages
                 });
             }).catch(err => {
                 this.setState({ moviesDataStatus: false, isLoading: false })
             });
     }
 
+    handleScroll = (e) => {
+        let windowHeight = Dimensions.get('window').height,
+            height = e.nativeEvent.contentSize.height,
+            offset = e.nativeEvent.contentOffset.y;
+        console.log('windowHeight', windowHeight)
+        console.log('height', height)
+        console.log('offset', offset)
+
+        if (windowHeight + offset >= height) {
+            console.log('if ', this.state)
+
+            let { page, totalPages, moviesData } = this.state;
+            if (page <= totalPages) {
+                let apiMoviesUrl = `${BASE_URL}${page}`;
+                fetch(apiMoviesUrl)
+                    .then(response => response.json())
+                    .then(response => {
+                        this.setState({
+                            isLoading: false,
+                            moviesData: [...moviesData, ...response.results],
+                            page: response.page + 1,
+                            totalPages: response.total_pages
+                        });
+                    }).catch(err => {
+                        this.setState({ isLoading: false })
+                    });
+            }
+        }
+    }
+
+
     detailScreen(Details) {
         this.props.navigation.navigate('About', { Details: Details });
-        console.log('Details', Details)
     }
 
     movies() {
         let { moviesDataStatus, moviesData } = this.state;
-
         return moviesDataStatus === true ? moviesData.map((data, key) => {
             return (
                 <TouchableOpacity style={styles.card} key={key} onPress={() => this.detailScreen(data)}>
@@ -81,7 +118,7 @@ export default class HomeScreen extends React.Component {
         } else {
             return (
                 <View style={styles.container}>
-                    <ScrollView>
+                    <ScrollView onScroll={this.handleScroll} scrollEnabled={true}>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                             {movies}
                         </View>
