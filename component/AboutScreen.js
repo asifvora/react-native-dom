@@ -26,7 +26,7 @@ export default class AboutScreen extends React.Component {
     componentWillMount() {
         setTimeout(() => {
             this.setState({ isLoading: false });
-        }, 3000);
+        }, 1000);
         let { Details } = this.props.navigation.state.params;
         this.setState({ Details: Details });
     }
@@ -36,7 +36,6 @@ export default class AboutScreen extends React.Component {
         console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
         console.disableYellowBox = true;
         const { Details } = this.state;
-        
         if (this.state.isLoading) {
             return (
                 <View style={styles.loading}>
@@ -47,10 +46,34 @@ export default class AboutScreen extends React.Component {
             return (
                 <View style={styles.container}>
                     <ScrollView>
-                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                            <Text style={styles.nameText}>
-                                Details
-                            </Text>
+                        <View style={{ width: '100%' }}>
+                            <Image
+                                style={styles.imageCover}
+                                resizeMode='cover'
+                                source={{ uri: `https://image.tmdb.org/t/p/w1280/${Details.backdrop_path}` }}
+                            />
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', }}>
+                                <Image
+                                    style={styles.imageMovie}
+                                    resizeMode='contain'
+                                    source={{ uri: `https://image.tmdb.org/t/p/w500/${Details.poster_path}` }}
+                                />
+                                <View style={styles.nameView}>
+                                    <Text style={styles.nameText}>
+                                        {Details.title}
+                                    </Text>
+                                    <Text style={styles.originalTitle}>
+                                        {Details.original_title}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.overviewMain}>
+                                <View style={[styles.overview]}>
+                                    <Text style={styles.overviewText}>
+                                        {Details.overview}
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </ScrollView>
                 </View>
@@ -62,35 +85,48 @@ export default class AboutScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa',
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        padding: 20
+        width: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        // backgroundColor: '#fafafa',
+        alignItems: 'center',
+        justifyContent: 'center',
+        // padding: 20
     },
-    card: {
-        borderWidth: 1,
+    overviewMain: {
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
         borderColor: '#8F8F8F',
         backgroundColor: 'white',
-        width: '15%',
-        marginLeft: 25,
-        marginBottom: 20,
-        shadowColor: 'black',
-        shadowOpacity: 0.2,
-        height: 280,
-        borderRadius: 5,
-        // justifyContent: 'center',
-        // alignItems: 'center',
+        width: '100%',
+        marginBottom: 10,
+        top: -100,
+    },
+    overview: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    overviewText: {
+        color: 'black',
+        fontSize: 18,
+        marginLeft: 5,
+        marginTop: 5,
+        textAlign: 'center'
     },
     imageView: {
         flexDirection: 'row',
     },
-    image: {
-        flex: 1,
-        width: null,
-        height: 210,
+    imageCover: {
+        width: '100%',
+        height: 350,
         overflow: 'hidden',
-        marginTop: 10,
-        marginBottom: 10
+    },
+    imageMovie: {
+        width: 200,
+        height: 250,
+        overflow: 'hidden',
+        top: -150,
+        left: 10
     },
     loading: {
         position: 'absolute',
@@ -105,14 +141,19 @@ const styles = StyleSheet.create({
         borderColor: "#CED0CE"
     },
     nameView: {
-        flex: 1,
-        borderTopWidth: 1,
-        borderColor: '#8F8F8F',
+        padding: 10
     },
     nameText: {
-        color: '#8F8F8F',
+        color: 'black',
         fontSize: 20,
-        marginLeft: 10,
-        marginTop: 5
+        marginLeft: 5,
+        marginTop: 5,
+        fontWeight: 'bold'
+    },
+    originalTitle: {
+        color: 'black',
+        fontSize: 18,
+        marginLeft: 5,
+        marginTop: 5,
     },
 });
