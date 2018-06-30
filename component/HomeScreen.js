@@ -49,22 +49,27 @@ export default class HomeScreen extends React.Component {
     }
 
     handleScroll = (e) => {
-        let { page, totalPages, moviesData } = this.state;
-        if (page <= totalPages) {
-            let apiMoviesUrl = `${BASE_URL}${page}`;
-            fetch(apiMoviesUrl)
-                .then(response => response.json())
-                .then(response => {
-                    this.setState({
-                        isLoading: false,
-                        moviesData: [...moviesData, ...response.results],
-                        page: response.page + 1,
-                        totalPages: response.total_pages,
-                        dataSource: ds.cloneWithRows([...moviesData, ...response.results])
+        let windowHeight = Dimensions.get('window').height,
+            height = e.nativeEvent.contentSize.height,
+            offset = e.nativeEvent.contentOffset.y;
+        if (windowHeight + offset >= height) {
+            let { page, totalPages, moviesData } = this.state;
+            if (page <= totalPages) {
+                let apiMoviesUrl = `${BASE_URL}${page}`;
+                fetch(apiMoviesUrl)
+                    .then(response => response.json())
+                    .then(response => {
+                        this.setState({
+                            isLoading: false,
+                            moviesData: [...moviesData, ...response.results],
+                            page: response.page + 1,
+                            totalPages: response.total_pages,
+                            dataSource: ds.cloneWithRows([...moviesData, ...response.results])
+                        });
+                    }).catch(err => {
+                        this.setState({ isLoading: false })
                     });
-                }).catch(err => {
-                    this.setState({ isLoading: false })
-                });
+            }
         }
     }
 
