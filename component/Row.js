@@ -20,7 +20,7 @@ export default class Row extends Component {
                             <Text style={styles.nameText}>
                                 {data.release_date}
                             </Text>
-                            <Text style={[styles.nameText, { color: 'green' }]}>
+                            <Text style={[styles.nameText, { color: 'rgb(56, 199, 0)' }]}>
                                 {data.vote_average}
                             </Text>
                         </View>

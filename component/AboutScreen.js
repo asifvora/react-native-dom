@@ -1,7 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator, ScrollView } from 'react-native';
-const BASE_URL = `https://movie-demo-api.now.sh/3/movie/popular?page=`;
-let self;
 
 export default class AboutScreen extends React.Component {
 
@@ -14,7 +12,6 @@ export default class AboutScreen extends React.Component {
             cast: [],
             castDataStatus: false,
         }
-        self = props;
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -59,9 +56,9 @@ export default class AboutScreen extends React.Component {
                         <Image
                             style={{ height: 50, width: 50, borderRadius: 50, marginTop: 15 }}
                             resizeMode='cover'
-                            source={{ uri: `https://image.tmdb.org/t/p/w185/${data.profile_path}` }}
+                            source={{ uri: data.profile_path !== null ? `https://image.tmdb.org/t/p/w185/${data.profile_path}` : `https://www.thestylease.com/images/user.png` }}
                         />
-                        <View style={[styles.nameView, { width: 300 }]}>
+                        <View style={[styles.nameView, { width: 400 }]}>
                             <Text style={styles.nameText}>
                                 {data.name}
                             </Text>
@@ -109,6 +106,9 @@ export default class AboutScreen extends React.Component {
                                     <Text style={styles.originalTitle}>
                                         {Details.original_title}
                                     </Text>
+                                    <Text style={[styles.originalTitle, { color: 'rgb(56, 199, 0)' }]}>
+                                        {Details.vote_average}
+                                    </Text>
                                 </View>
                             </View>
                             <View style={styles.overviewMain}>
@@ -118,7 +118,7 @@ export default class AboutScreen extends React.Component {
                                     </Text>
                                 </View>
                             </View>
-                            <View style={styles.overviewMain} >
+                            <View style={[styles.overviewMain, { paddingTop: 20, top: -80 }]} >
                                 {this.castData()}
                             </View>
                         </View>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0)',
         // backgroundColor: '#fafafa',
-        alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'center',
         // padding: 20
     },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         backgroundColor: 'white',
         width: '100%',
-        marginBottom: 10,
+        paddingBottom: 20,
         top: -100,
     },
     overview: {
