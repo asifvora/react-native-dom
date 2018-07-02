@@ -2,10 +2,6 @@
 
 An experimental, comprehensive port of React Native to the web.
 
-# Preview
-
-![React-native-dom](https://github.com/asifvora/react-native-dom/blob/master/doc/Screen.gif)
-
 * **Multithreaded by default:** Following the exact same architecture as React
   Native on mobile, all of your react components/app logic are run in web
   worker, leaving the main thread to entirely focus on rendering.
@@ -18,6 +14,10 @@ An experimental, comprehensive port of React Native to the web.
 * **Ecosystem compatible escape hatch to the DOM:** Using the same native module
   bridge, expose DOM-specific APIs in a more generic way that can easily be made
   into a cross-platform module.
+  
+# Preview
+
+![React-native-dom](https://github.com/asifvora/react-native-dom/blob/master/doc/Screen.gif)
 
 ## Getting Started
 
