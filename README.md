@@ -2,6 +2,8 @@
 
 An experimental, comprehensive port of React Native to the web.
 
+# Preview
+
 ![React-native-dom](https://github.com/asifvora/react-native-dom/blob/master/doc/Screen.gif)
 
 * **Multithreaded by default:** Following the exact same architecture as React
