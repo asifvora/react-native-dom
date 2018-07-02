@@ -134,9 +134,8 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0)',
-        // backgroundColor: '#fafafa',
-        // alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'center',
+        // justifyContent: 'center',
         // padding: 20
     },
     overviewMain: {
