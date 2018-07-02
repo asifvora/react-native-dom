@@ -2,6 +2,8 @@
 
 An experimental, comprehensive port of React Native to the web.
 
+![React-native-dom](https://github.com/asifvora/react-native-dom/blob/master/doc/Screen.gif)
+
 * **Multithreaded by default:** Following the exact same architecture as React
   Native on mobile, all of your react components/app logic are run in web
   worker, leaving the main thread to entirely focus on rendering.
@@ -41,10 +43,6 @@ $ npm install
 $ react-native start
 $ http://localhost:8081/dom/
 ```
-
-## View Demo
-
-[Demo]()
 
 ## Questions?🤔 
   
